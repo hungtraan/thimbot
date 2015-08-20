@@ -25,6 +25,8 @@ import lxml.html
 from lxml.cssselect import CSSSelector
 import urllib
 import re
+import operator
+import datetime
 
 
 
@@ -33,7 +35,8 @@ LAST_UPDATE_ID = None
 
 def main():
     global LAST_UPDATE_ID
-
+    global startedPoint
+    startedPoint = datetime.datetime.now().isoformat(' ')
     logging.basicConfig(
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
@@ -51,6 +54,10 @@ def main():
     global byed
     helloed = []
     byed = []
+    global thimRanking
+    thimRanking = {}
+    global thimDict
+    thimDict = {}
     while True:
         echo(bot)
         time.sleep(1)
@@ -65,65 +72,107 @@ def echo(bot):
         if LAST_UPDATE_ID < update.update_id:
             # chat_id is required to reply any message
             first_name = update.message.from_user.first_name.encode('utf-8')
+            last_name = update.message.from_user.last_name.encode('utf-8')
             chat_id = update.message.chat_id
             message = update.message.text.encode('utf-8')
+            user_id = update.message.from_user.id
+
+            if user_id not in thimRanking:
+                thimDict[user_id] = first_name + " " + last_name
+
+            # Record "thim" calling leaderboard
+            if "thím" in message:
+                if user_id in thimRanking:
+                    thimRanking[user_id] += 1
+                else:
+                    thimRanking[user_id] = 1
+
+            if message == '/thim':
+                if len(thimRanking) == 0:
+                    bot.sendMessage(chat_id=chat_id,text="Các thím ít gọi thím quá, làm sao ta trả lời ai 'thím' nhất Tiki được " + telegram.Emoji.PILE_OF_POO)
+                    LAST_UPDATE_ID = update.update_id
+                    return
+
+                user_id_most = max(thimRanking.iteritems(), key=operator.itemgetter(1))[0]
+                
+                if len(thimRanking) < 3:
+                    numtoPrint = len(thimRanking)
+                else:
+                    numtoPrint = 3
+
+                leaderBoard = dict(sorted(thimRanking.iteritems(), key=operator.itemgetter(1), reverse=True)[:numtoPrint])
+
+                leaderBoardStr = "Tính từ lúc ta sống tới giờ (" + startedPoint+ "):\n\nGọi thím nhiều nhất chỉ có thể là:\n"
+
+                for userid in leaderBoard:
+                    leaderBoardStr += ">> " + str(thimRanking[userid]) + " lần - " + thimDict[userid]  + "\n"
+
+                bot.sendMessage(chat_id=chat_id,text=leaderBoardStr)
+                #LAST_UPDATE_ID = update.update_id
+                #thimDict[user_id_most]
+
+            if message == '/help':
+                helpText = "Ta xin tự giới thiệu, ta là Thánh Thím Tiki. Ta có thể làm các việc sau:\n/chaothim - Chào thím, thím chào lại\n/byethim - Bai thím, thím bai luôn\n/thimwiki từ khoá --lang - thím tìm ra bài wiki gần với từ khoá nhứt\nCác thứ khác tự mò mới vui ;): /omg /whereisthim /det /fthim /\n"
+                bot.sendMessage(chat_id=chat_id,text=helpText + telegram.Emoji.RELIEVED_FACE)
+                #LAST_UPDATE_ID = update.update_id
 
             if message == "/chaothim":
-                if chat_id not in helloed:
+                if u.message.from_user.id not in helloed:
                     # Reply the message
                     bot.sendMessage(chat_id=chat_id,text="Chào thím "+ first_name + " " + telegram.Emoji.PILE_OF_POO)
-                    helloed.append(chat_id)
+                    helloed.append(u.message.from_user.id)
                 else:
                     #bot.sendMessage(chat_id=chat_id, text=message)
                     bot.sendMessage(chat_id=chat_id, text= replies[random.randrange(len(replies))]+ first_name +", làm gì chào quài zậy.")
 
                 # Updates global offset to get the new updates
-                LAST_UPDATE_ID = update.update_id
+                #LAST_UPDATE_ID = update.update_id
 
             if message == "/byethim":
-                if chat_id not in byed:
+                if u.message.from_user.id not in byed:
                     bot.sendMessage(chat_id=chat_id,text="Bái bai thím "+ first_name + " " + telegram.Emoji.PILE_OF_POO)
-                    byed.append(chat_id)
+                    byed.append(u.message.from_user.id)
                 else:
                     bot.sendMessage(chat_id=chat_id, text= byes[random.randrange(len(replies))]+ first_name)
 
-                LAST_UPDATE_ID = update.update_id
+                #LAST_UPDATE_ID = update.update_id
 
             if message == "/omg":
                 bot.sendMessage(chat_id=chat_id,text="Con cứ bình tĩnh, mọi việc sẽ ổn cả thôi "+ telegram.Emoji.RELIEVED_FACE)
 
-                LAST_UPDATE_ID = update.update_id
+                #LAST_UPDATE_ID = update.update_id
 
             if message == "/whereisthim":
                 bot.sendMessage(chat_id=chat_id,text="Ta đây, con cần gì, "+ first_name + "? " +telegram.Emoji.RELIEVED_FACE)
 
-                LAST_UPDATE_ID = update.update_id
+                #LAST_UPDATE_ID = update.update_id
 
             if "thím ơi" in message:
-                bot.sendMessage(chat_id=chat_id,text="Ta đây, con cần gì, "+ first_name + "? " +telegram.Emoji.RELIEVED_FACE)
+                oiReplies = ["Ta đây, con cần gì, ","Wểi... ","Ai gọi ta đó, có ta đâyyyyy "]
+                bot.sendMessage(chat_id=chat_id,text= oiReplies[random.randrange(len(oiReplies))]+ first_name + "? " +telegram.Emoji.RELIEVED_FACE)
 
-                LAST_UPDATE_ID = update.update_id
+                #LAST_UPDATE_ID = update.update_id
             if message == '/det':
                 bot.sendMessage(chat_id=chat_id,text="Đột...")
+                #LAST_UPDATE_ID = update.update_id
 
-                LAST_UPDATE_ID = update.update_id
             if ":(" in message:
                 bot.sendMessage(chat_id=chat_id,text=first_name + " ơi, con đừng buồn..." +telegram.Emoji.RELIEVED_FACE)
 
-                LAST_UPDATE_ID = update.update_id
+                #LAST_UPDATE_ID = update.update_id
 
             if message == '/fthim':
                 bot.sendMessage(chat_id=chat_id,text="Lượn đi cho nước nó trong "+ first_name + " à " +telegram.Emoji.RELIEVED_FACE)
 
-                LAST_UPDATE_ID = update.update_id
+                #LAST_UPDATE_ID = update.update_id
 
             if message == '/thimui':
                 bot.sendMessage(chat_id=chat_id,text="http://uimovement.com/ui/"+str(random.randrange(1,170)))
-                LAST_UPDATE_ID = update.update_id
+                #LAST_UPDATE_ID = update.update_id
 
             if message == '/thimsanmoi' or message == 'thím săn mồi':
                 bot.sendMessage(chat_id=chat_id,text="http://www.producthunt.com/tech/"+str(random.randrange(1,31396)))
-                LAST_UPDATE_ID = update.update_id
+                #LAST_UPDATE_ID = update.update_id
 
             if '/thimwiki' in message:
                 if len(message.split()) < 2 :
@@ -171,11 +220,12 @@ def echo(bot):
 
                 # Apply the selector to the DOM tree.
                 firstParagraph = lxml.html.tostring(wsel(wtree)[0])
-                firstParagraph = re.sub("<.*?>", " ", firstParagraph)
+                firstParagraph = re.sub("<.*?>", " ", firstParagraph).encode('utf-8')
                 #print firstParagraph
                 
-                bot.sendMessage(chat_id=chat_id,text="Kết quả đầu tiên: " + gotoUrl + "\n" + firstParagraph)
-                LAST_UPDATE_ID = update.update_id
+                bot.sendMessage(chat_id=chat_id,text="Kết quả đầu tiên: " + gotoUrl)
+            
+            LAST_UPDATE_ID = update.update_id
 
 if __name__ == '__main__':
     main()
