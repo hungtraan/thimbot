@@ -87,7 +87,7 @@ def echo(bot):
                 else:
                     thimRanking[user_id] = 1
 
-            if message == '/thim':
+            if message == '/thim' or message == '/thim@ThimBot' or message[:4]=='/thim':
                 if len(thimRanking) == 0:
                     bot.sendMessage(chat_id=chat_id,text="Các thím ít gọi thím quá, làm sao ta trả lời ai 'thím' nhất Tiki được " + telegram.Emoji.PILE_OF_POO)
                     LAST_UPDATE_ID = update.update_id
@@ -112,7 +112,7 @@ def echo(bot):
                 #thimDict[user_id_most]
 
             if message == '/help':
-                helpText = "Ta xin tự giới thiệu, ta là Thánh Thím Tiki. Ta có thể làm các việc sau:\n/chaothim - Chào thím, thím chào lại\n/byethim - Bai thím, thím bai luôn\n/thimwiki từ khoá --lang - thím tìm ra bài wiki gần với từ khoá nhứt\nCác thứ khác tự mò mới vui ;): /omg /whereisthim /det /fthim /\n"
+                helpText = "Xin chào, ta là Thánh Thím Tiki. Ta có thể làm các việc sau:\n/chaothim - Chào thím, thím chào lại\n/byethim - Bai thím, thím bai luôn\n/thimwiki từ khoá --lang - thím tìm ra bài wiki gần với từ khoá nhứt\nCác thứ khác tự mò mới vui ;): /omg /whereisthim /det /fthim\n"
                 bot.sendMessage(chat_id=chat_id,text=helpText + telegram.Emoji.RELIEVED_FACE)
                 #LAST_UPDATE_ID = update.update_id
 
@@ -173,6 +173,28 @@ def echo(bot):
             if message == '/thimsanmoi' or message == 'thím săn mồi':
                 bot.sendMessage(chat_id=chat_id,text="http://www.producthunt.com/tech/"+str(random.randrange(1,31396)))
                 #LAST_UPDATE_ID = update.update_id
+
+            if message == '/thimdaudo' or 'đậu đỏ' in message:
+                daudoPhotos = {'aotuong':'../assets/img/aotuong.jpg',
+                                'dethuong':'../assets/img/aotuong.jpg',
+                                'nhiemmau':'../assets/img/nhiemmau.jpg',
+                                'khomau':'../assets/img/khomau.jpg',
+                                'gian':'../assets/img/gian.jpg',
+                                'ghenha':'../assets/img/ghenha.jpg'
+                                }
+                listDau = ""
+                if len(message.split()) == 1:
+                    bot.sendPhoto(chat_id=chat_id, photo=random.choice(daudoPhotos.values()))
+                else:
+                    whichDau = message.split()[1]
+                    if whichDau == 'help':
+                        for key in daudoPhotos.keys():
+                            listDau += key + "\n"
+
+                    elif whichDau in daudoPhotos:
+                        bot.sendPhoto(chat_id=chat_id, photo=daudoPhotos[whichDau])
+                    else:
+                        bot.sendPhoto(chat_id=chat_id, photo=random.choice(daudoPhotos.values()))
 
             if '/thimwiki' in message:
                 if len(message.split()) < 2 :
