@@ -77,6 +77,11 @@ def echo(bot):
             message = update.message.text.encode('utf-8')
             user_id = update.message.from_user.id
 
+            # Remove all @ThimBot from message
+            if '@ThimBot' in message:
+                message.replace('@ThimBot','')
+
+            # Count thim call times
             if user_id not in thimRanking:
                 thimDict[user_id] = first_name + " " + last_name
 
@@ -87,7 +92,7 @@ def echo(bot):
                 else:
                     thimRanking[user_id] = 1
 
-            if message == '/thim' or message == '/thim@ThimBot' or message[:4]=='/thim':
+            if message == '/thim' or message == '/thim@ThimBot':
                 if len(thimRanking) == 0:
                     bot.sendMessage(chat_id=chat_id,text="Các thím ít gọi thím quá, làm sao ta trả lời ai 'thím' nhất Tiki được " + telegram.Emoji.PILE_OF_POO)
                     LAST_UPDATE_ID = update.update_id
@@ -100,27 +105,27 @@ def echo(bot):
                 else:
                     numtoPrint = 3
 
-                leaderBoard = dict(sorted(thimRanking.iteritems(), key=operator.itemgetter(1), reverse=True)[:numtoPrint])
+                leaderBoard = sorted(thimRanking.iteritems(), key=operator.itemgetter(1), reverse=True)[:numtoPrint]
 
-                leaderBoardStr = "Tính từ lúc ta sống tới giờ (" + startedPoint+ "):\n\nGọi thím nhiều nhất chỉ có thể là:\n"
+                leaderBoardStr = "Tính từ lúc ta sống tới giờ (" + startedPoint+ "):\n\nGọi 'thím' nhiều nhất chỉ có thể là:\n"
 
-                for userid in leaderBoard:
-                    leaderBoardStr += ">> " + str(thimRanking[userid]) + " lần - " + thimDict[userid]  + "\n"
+                for user in leaderBoard:
+                    leaderBoardStr += ">> " + str(thimRanking[user[0]]) + " lần - " + thimDict[user[0]]  + "\n"
 
                 bot.sendMessage(chat_id=chat_id,text=leaderBoardStr)
                 #LAST_UPDATE_ID = update.update_id
                 #thimDict[user_id_most]
 
             if message == '/help':
-                helpText = "Xin chào, ta là Thánh Thím Tiki. Ta có thể làm các việc sau:\n/chaothim - Chào thím, thím chào lại\n/byethim - Bai thím, thím bai luôn\n/thimwiki từ khoá --lang - thím tìm ra bài wiki gần với từ khoá nhứt\nCác thứ khác tự mò mới vui ;): /omg /whereisthim /det /fthim\n"
+                helpText = "Xin chào, ta là Thánh Thím Tiki. Ta có thể làm các việc sau:\n/chaothim - Chào thím, thím chào lại\n/byethim - Bai thím, thím bai luôn\n/thimwiki từ khoá --lang - thím tìm ra bài wiki gần với từ khoá nhứt\n\nCác thứ khác tự mò mới vui ;):\n\n /thimui\n/thimsanmoi hoặc 'thím săn mồi'\n/omg\n/whereisthim\n/det\n/fthim\n"
                 bot.sendMessage(chat_id=chat_id,text=helpText + telegram.Emoji.RELIEVED_FACE)
                 #LAST_UPDATE_ID = update.update_id
 
             if message == "/chaothim":
-                if u.message.from_user.id not in helloed:
+                if user_id not in helloed:
                     # Reply the message
                     bot.sendMessage(chat_id=chat_id,text="Chào thím "+ first_name + " " + telegram.Emoji.PILE_OF_POO)
-                    helloed.append(u.message.from_user.id)
+                    helloed.append(update.message.from_user.id)
                 else:
                     #bot.sendMessage(chat_id=chat_id, text=message)
                     bot.sendMessage(chat_id=chat_id, text= replies[random.randrange(len(replies))]+ first_name +", làm gì chào quài zậy.")
@@ -129,9 +134,9 @@ def echo(bot):
                 #LAST_UPDATE_ID = update.update_id
 
             if message == "/byethim":
-                if u.message.from_user.id not in byed:
+                if user_id not in byed:
                     bot.sendMessage(chat_id=chat_id,text="Bái bai thím "+ first_name + " " + telegram.Emoji.PILE_OF_POO)
-                    byed.append(u.message.from_user.id)
+                    byed.append(update.message.from_user.id)
                 else:
                     bot.sendMessage(chat_id=chat_id, text= byes[random.randrange(len(replies))]+ first_name)
 
@@ -232,21 +237,70 @@ def echo(bot):
                 href = re.search("(\"\/wiki\/)(.*?)\"",astr)
                 gotoUrl = "http://"+lang+".wikipedia.org"+ href.group(0)[1:-1]
                 
-                wikiPage = urllib.urlopen(gotoUrl).read()
+                #wikiPage = urllib.urlopen(gotoUrl).read()
 
                 # build the DOM Tree
-                wtree = lxml.html.fromstring(wikiPage)
+                #wtree = lxml.html.fromstring(wikiPage)
 
                 # construct a CSS Selector
-                wsel = CSSSelector('#mw-content-text > p:nth-child(4)')
+                #wsel = CSSSelector('#mw-content-text > p:nth-child(4)')
 
                 # Apply the selector to the DOM tree.
-                firstParagraph = lxml.html.tostring(wsel(wtree)[0])
-                firstParagraph = re.sub("<.*?>", " ", firstParagraph).encode('utf-8')
+                #firstParagraph = lxml.html.tostring(wsel(wtree)[0])
+                #firstParagraph = re.sub("<.*?>", " ", firstParagraph).encode('utf-8')
                 #print firstParagraph
                 
                 bot.sendMessage(chat_id=chat_id,text="Kết quả đầu tiên: " + gotoUrl)
             
+            if '/thimgoogle' in message:
+                if len(message.split()) < 2 :
+                    bot.sendMessage(chat_id=chat_id,text="Cú pháp để hỏi ta là: /thimgoogle từ muốn kiếm")
+                    LAST_UPDATE_ID = update.update_id
+                    return
+
+                query = ' '.join(message.split()[1:])
+                q = {'q':query}
+                url = "https://www.google.com/search?"+urllib.urlencode(q)
+                resultPage = urllib.urlopen(url).read()
+
+                if "did not match any documents" in resultPage:
+                    bot.sendMessage(chat_id=chat_id,text="Thím hổng tìm ra gì trên Google cho cái này :(")
+                    LAST_UPDATE_ID = update.update_id
+                    return
+
+                # build the DOM Tree
+                tree = lxml.html.fromstring(resultPage)
+
+                # construct a CSS Selector
+                sel = CSSSelector('.r > a')
+
+                # Apply the selector to the DOM tree.
+                results = sel(tree)
+                # print the HTML for the first result.
+                firstResult = results[0]
+                sel2 = CSSSelector('li>div>a')
+
+                a = sel2(firstResult)
+                astr = lxml.html.tostring(a[0])
+
+                href = re.search("(\"\/wiki\/)(.*?)\"",astr)
+                gotoUrl = "http://"+lang+".wikipedia.org"+ href.group(0)[1:-1]
+                
+                #wikiPage = urllib.urlopen(gotoUrl).read()
+
+                # build the DOM Tree
+                #wtree = lxml.html.fromstring(wikiPage)
+
+                # construct a CSS Selector
+                #wsel = CSSSelector('#mw-content-text > p:nth-child(4)')
+
+                # Apply the selector to the DOM tree.
+                #firstParagraph = lxml.html.tostring(wsel(wtree)[0])
+                #firstParagraph = re.sub("<.*?>", " ", firstParagraph).encode('utf-8')
+                #print firstParagraph
+                
+                bot.sendMessage(chat_id=chat_id,text="Kết quả đầu tiên: " + gotoUrl)
+
             LAST_UPDATE_ID = update.update_id
 
 if __name__ == '__main__':
