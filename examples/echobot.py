@@ -79,7 +79,7 @@ def echo(bot):
 
             # Remove all @ThimBot from message
             if '@ThimBot' in message:
-                message.replace('@ThimBot','')
+                message = message.replace('@ThimBot','')
 
             # Count thim call times
             if user_id not in thimRanking:
