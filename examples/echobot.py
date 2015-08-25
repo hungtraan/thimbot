@@ -27,6 +27,7 @@ import urllib
 import re
 import operator
 import datetime
+import sys
 
 
 
@@ -189,28 +190,45 @@ def echo(bot):
                                 }
                 listDau = ""
                 if len(message.split()) == 1:
-                    bot.sendPhoto(chat_id=chat_id, photo=random.choice(daudoPhotos.values()))
+                    #Error handling
+                    try:
+                        bot.sendPhoto(chat_id=chat_id, photo=random.choice(daudoPhotos.values()))
+                    except: # catch *all* exceptions
+                        e = sys.exc_info()[0]
+                        write_to_page( "<p>Error: %s</p>" % e )
+                    
                 else:
                     whichDau = message.split()[1]
                     if whichDau == 'help':
                         for key in daudoPhotos.keys():
                             listDau += key + "\n"
-
                     elif whichDau in daudoPhotos:
-                        bot.sendPhoto(chat_id=chat_id, photo=daudoPhotos[whichDau])
+                        try:
+                            bot.sendPhoto(chat_id=chat_id, photo=daudoPhotos[whichDau])
+                        except: # catch *all* exceptions
+                        e = sys.exc_info()[0]
+                        write_to_page( "<p>Error: %s</p>" % e )
                     else:
-                        bot.sendPhoto(chat_id=chat_id, photo=random.choice(daudoPhotos.values()))
+                        try:
+                            bot.sendPhoto(chat_id=chat_id, photo=random.choice(daudoPhotos.values()))
+                        except: # catch *all* exceptions
+                        e = sys.exc_info()[0]
+                        write_to_page( "<p>Error: %s</p>" % e )
 
             if '/thimwiki' in message:
                 if len(message.split()) < 2 :
-                    bot.sendMessage(chat_id=chat_id,text="Cú pháp để hỏi ta là: /thimwiki từ-muốn-hỏi")
+                    bot.sendMessage(chat_id=chat_id,text="Cú pháp để hỏi ta là: /thimwiki từ-muốn-hỏi --lang=en/vi")
                     LAST_UPDATE_ID = update.update_id
                     return
 
-                query = message.split()[1]
                 lang = 'en'
-                if len(message.split()) > 2:
-                    lang = message.split()[2]
+                if '--lang' in message:
+                    langIdx = message.find('--lang')+7
+                    lang = message[langIdx:]
+                    message = messagep[:landIdx-7]
+
+                query = message.replace('/thimwiki ','')
+                
                 url = "http://"+lang+".wikipedia.org/w/index.php?title=Special%3ASearch&profile=default&search="+query+"&fulltext=Search"
                 resultPage = urllib.urlopen(url).read()
 
