@@ -30,7 +30,6 @@ import datetime
 import sys
 
 
-
 LAST_UPDATE_ID = None
 
 
@@ -206,14 +205,14 @@ def echo(bot):
                         try:
                             bot.sendPhoto(chat_id=chat_id, photo=daudoPhotos[whichDau])
                         except: # catch *all* exceptions
-                        e = sys.exc_info()[0]
-                        write_to_page( "<p>Error: %s</p>" % e )
+                            e = sys.exc_info()[0]
+                            write_to_page( "<p>Error: %s</p>" % e )
                     else:
                         try:
                             bot.sendPhoto(chat_id=chat_id, photo=random.choice(daudoPhotos.values()))
                         except: # catch *all* exceptions
-                        e = sys.exc_info()[0]
-                        write_to_page( "<p>Error: %s</p>" % e )
+                            e = sys.exc_info()[0]
+                            write_to_page( "<p>Error: %s</p>" % e )
 
             if '/thimwiki' in message:
                 if len(message.split()) < 2 :
@@ -318,7 +317,7 @@ def echo(bot):
                 #print firstParagraph
                 
                 bot.sendMessage(chat_id=chat_id,text="Kết quả đầu tiên: " + gotoUrl)
-
+                
             LAST_UPDATE_ID = update.update_id
 
 if __name__ == '__main__':

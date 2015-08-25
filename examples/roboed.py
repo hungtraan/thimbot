@@ -33,17 +33,15 @@ def main():
     LAST_UPDATE_ID = bot.getUpdates()[-1].update_id  # Get lastest update
 
     while True:
-        for update in bot.getUpdates(offset=LAST_UPDATE_ID):
+        for update in bot.getUpdates(offset=LAST_UPDATE_ID, timeout=10):
             text = update.message.text
             chat_id = update.message.chat.id
             update_id = update.update_id
 
-            if LAST_UPDATE_ID < update_id:  # If newer than the initial
-                                            # LAST_UPDATE_ID
-                if text:
-                    roboed = ed(text)  # Ask something to Robô Ed
-                    bot.sendMessage(chat_id=chat_id, text=roboed)
-                    LAST_UPDATE_ID = update_id
+            if text:
+                roboed = ed(text)  # Ask something to Robô Ed
+                bot.sendMessage(chat_id=chat_id, text=roboed)
+                LAST_UPDATE_ID = update_id + 1
 
 
 def ed(text):
