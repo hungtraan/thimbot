@@ -171,7 +171,7 @@ def echo(bot):
 
                 #LAST_UPDATE_ID = update.update_id
 
-            if "thím ơi" in message:
+            if "thím ơi" in message or "Thím ơi" in message:
                 oiReplies = ["Ta đây, con cần gì, ","Wểi... ","Ai gọi ta đó, có ta đâyyyyy "]
                 bot.sendMessage(chat_id=chat_id,text= oiReplies[random.randrange(len(oiReplies))]+ first_name + "? " +telegram.Emoji.RELIEVED_FACE)
 
