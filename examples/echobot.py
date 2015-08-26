@@ -28,7 +28,7 @@ import re
 import operator
 import datetime
 import sys
-
+import feedparser
 
 LAST_UPDATE_ID = None
 
@@ -58,6 +58,12 @@ def main():
     thimRanking = {}
     global thimDict
     thimDict = {}
+
+    global newRelicFeed
+    newRelicFeed = feedparser.parse('https://rpm.newrelic.com/accounts/857072/applications/9351884/incidents.rss?data_access_key=b5e5145b73b9a5c571843470b1c87ddad1aa11ae0b724a5')
+    global currAlert
+    currAlert = newRelicFeed.entries[0]['link']
+
     while True:
         echo(bot)
         time.sleep(1)
@@ -80,6 +86,30 @@ def echo(bot):
             # Remove all @ThimBot from message
             if '@ThimBot' in message:
                 message = message.replace('@ThimBot','')
+
+            # Almighty New Relic Alert ====================================
+            newRelicFeed = feedparser.parse('https://rpm.newrelic.com/accounts/857072/applications/9351884/incidents.rss?data_access_key=b5e5145b73b9a5c571843470b1c87ddad1aa11ae0b724a5')
+            
+            latestAlert = newRelicFeed.entries[0]['link']
+            global currAlert
+            isUpdated = (currAlert != latestAlert)
+            
+            if message == '/getAlert':
+                fullAlert = newRelicFeed.entries[0]
+                alertText = '================= NewRelic Alert =================\n\n' + fullAlert['title'] + "\n" + fullAlert['description'] 
+                bot.sendMessage(chat_id=chat_id,text=alertText)
+
+            if isUpdated:
+                # Send alert
+                fullAlert = newRelicFeed.entries[0]
+                alertText = '================= NewRelic Alert =================\n\n' + fullAlert['title'] + "\n" + fullAlert['description'] 
+                bot.sendMessage(chat_id=chat_id,text=alertText)
+
+                # Update latest alert
+                currAlert = latestAlert
+
+            # End almighty New Relic Alert ====================================
+
 
             # Count thim call times
             if user_id not in thimRanking:
