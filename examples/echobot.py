@@ -121,10 +121,26 @@ def echo(bot):
                 bot.sendMessage(chat_id=chat_id,text=helpText + telegram.Emoji.RELIEVED_FACE)
                 #LAST_UPDATE_ID = update.update_id
 
-            if message == "/chaothim":
+            if 'ai đẹp trai nhất team tech' in message:
+                trai = ['Thông','Tùng','Phong','Đức',"Hoà Lê",'Hoà Nguyễn','Hoàng','Hạt','Duy','Tân','Đông','Trung']
+                
+                bot.sendMessage(chat_id=chat_id,text="Hẳn là thím... "+ trai[random.randrange(len(trai)-1)] + " " + telegram.Emoji.PILE_OF_POO)
+                time.sleep(3)
+                bot.sendMessage(chat_id=chat_id,text="À không, ta nghĩ lại... Đẹp nhất phải là thím "+ trai[random.randrange(len(trai)-1)] + " " + telegram.Emoji.PILE_OF_POO)
+                time.sleep(3)
+                bot.sendMessage(chat_id=chat_id,text="À vẫn không! ĐẸP TRAI NHẤT PHẢI LÀ THÍM "+ trai[random.randrange(len(trai)-1)] + " " + telegram.Emoji.PILE_OF_POO)
+
+            if 'ai đẹp gái nhất team tech' in message or 'ai xinh gái nhất team tech' in message:
+                gai = ['Bích',"Vi",'Giàu','Khanh']
+                bot.sendMessage(chat_id=chat_id,text="Thím kia ngươi ở trên server... Người đẹp nhất trần hẳn là... "+ gai[random.randrange(len(gai)-1)] + " " + telegram.Emoji.WINKING_FACE)
+                time.sleep(5)
+                bot.sendMessage(chat_id=chat_id,text="Ta nói giỡn, chứ nữ team Tech ai cũng xinh đẹp rạng ngời "+ telegram.Emoji.WINKING_FACE)
+
+            if message == "/chaothim" or message =="Chào thím":
+                ways = ['Annyeong haseyooooo',"Hếlôôôôôôô", "Bông giuaaa",'Sawadikaaaapppp','Konnichiwaaaaa ']
                 if user_id not in helloed:
                     # Reply the message
-                    bot.sendMessage(chat_id=chat_id,text="Chào thím "+ first_name + " " + telegram.Emoji.PILE_OF_POO)
+                    bot.sendMessage(chat_id=chat_id,text= ways[random.randrange(len(ways)-1)]+ " thím "+ first_name + " " + telegram.Emoji.PILE_OF_POO)
                     helloed.append(update.message.from_user.id)
                 else:
                     #bot.sendMessage(chat_id=chat_id, text=message)
@@ -143,7 +159,7 @@ def echo(bot):
                 #LAST_UPDATE_ID = update.update_id
 
             if message == "/omg":
-                bot.sendMessage(chat_id=chat_id,text="Con cứ bình tĩnh, mọi việc sẽ ổn cả thôi "+ telegram.Emoji.RELIEVED_FACE)
+                bot.sendMessage(chat_id=chat_id,text="Con cứ bình tĩnh +"+first_name+" à, mọi việc sẽ ổn cả thôi "+ telegram.Emoji.RELIEVED_FACE)
 
                 #LAST_UPDATE_ID = update.update_id
 
@@ -164,9 +180,9 @@ def echo(bot):
             if ":(" in message or "buồn quá" in message:
                 bot.sendMessage(chat_id=chat_id,text=first_name + " ơi, con đừng buồn..." +telegram.Emoji.RELIEVED_FACE)
 
-            if ":)" in message:
-                sass = ["Thôi đi thím "+first_name + ", bày đặt cười hiền... ", "Có vẻ giả tạo nha thím "+first_name + " :)",":) :) :) :) "+first_name + " :) :) :) ", "Có đẹp bằng Thánh Thím ta không mà đòi cười hiền hả "+first_name + " :) "]
-                bot.sendMessage(chat_id=chat_id,text=sass[random.randrange(len(sass))] + telegram.Emoji.PILE_OF_POO)
+            if ":)" in message and ':))' not in message:
+                sass = ["Thôi đi thím "+first_name + ", bày đặt cười hiền... ", "Có vẻ giả tạo nha thím "+first_name + " :) ",":) :) :) :) "+first_name + " :) :) :) ", "Có đẹp bằng Thánh Thím ta không mà đòi cười hiền hả "+first_name + " :) ",":) cái wừng... "]
+                bot.sendMessage(chat_id=chat_id,text=sass[random.randrange(0,len(sass)-1)] + telegram.Emoji.PILE_OF_POO)
 
             if message == '/fthim':
                 bot.sendMessage(chat_id=chat_id,text="Lượn đi cho nước nó trong "+ first_name + " à " +telegram.Emoji.RELIEVED_FACE)
@@ -223,7 +239,7 @@ def echo(bot):
                     LAST_UPDATE_ID = update.update_id
                     return
 
-                lang = 'en'
+                lang = 'vi'
                 if '--lang' in message:
                     langIdx = message.find('--lang')+7
                     lang = message[langIdx:]
