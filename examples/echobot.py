@@ -161,10 +161,12 @@ def echo(bot):
                 bot.sendMessage(chat_id=chat_id,text="Đột...")
                 #LAST_UPDATE_ID = update.update_id
 
-            if ":(" in message:
+            if ":(" in message or "buồn quá" in message:
                 bot.sendMessage(chat_id=chat_id,text=first_name + " ơi, con đừng buồn..." +telegram.Emoji.RELIEVED_FACE)
 
-                #LAST_UPDATE_ID = update.update_id
+            if ":)" in message:
+                sass = ["Thôi đi thím "+first_name + ", bày đặt cười hiền... ", "Có vẻ giả tạo nha thím "+first_name + " :)",":) :) :) :) "+first_name + " :) :) :) ", "Có đẹp bằng Thánh Thím ta không mà đòi cười hiền hả "+first_name + " :) "]
+                bot.sendMessage(chat_id=chat_id,text=sass[random.randrange(len(sass))] + telegram.Emoji.PILE_OF_POO)
 
             if message == '/fthim':
                 bot.sendMessage(chat_id=chat_id,text="Lượn đi cho nước nó trong "+ first_name + " à " +telegram.Emoji.RELIEVED_FACE)
@@ -180,6 +182,7 @@ def echo(bot):
                 #LAST_UPDATE_ID = update.update_id
 
             if message == '/thimdaudo' or 'đậu đỏ' in message:
+                return
                 daudoPhotos = {'aotuong':'../assets/img/aotuong.jpg',
                                 'dethuong':'../assets/img/aotuong.jpg',
                                 'nhiemmau':'../assets/img/nhiemmau.jpg',
@@ -224,9 +227,10 @@ def echo(bot):
                 if '--lang' in message:
                     langIdx = message.find('--lang')+7
                     lang = message[langIdx:]
-                    message = messagep[:landIdx-7]
+                    message = message[:langIdx-7]
 
                 query = message.replace('/thimwiki ','')
+                query = urllib.quote(query)
                 
                 url = "http://"+lang+".wikipedia.org/w/index.php?title=Special%3ASearch&profile=default&search="+query+"&fulltext=Search"
                 resultPage = urllib.urlopen(url).read()
@@ -276,8 +280,7 @@ def echo(bot):
                     return
 
                 query = ' '.join(message.split()[1:])
-                q = {'q':query}
-                url = "https://www.google.com/search?"+urllib.urlencode(q)
+                url = "https://www.google.com/search?es_th=1&q="+urllib.quote(query)+"&rct=j&qscrl=1"
                 resultPage = urllib.urlopen(url).read()
 
                 if "did not match any documents" in resultPage:
