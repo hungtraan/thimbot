@@ -121,7 +121,7 @@ def echo(bot):
                 bot.sendMessage(chat_id=chat_id,text=helpText + telegram.Emoji.RELIEVED_FACE)
                 #LAST_UPDATE_ID = update.update_id
 
-            if 'ai đẹp trai nhất team tech' in message:
+            if ('ai đẹp' in message or 'Ai đẹp' in message) and ('trai' in message or 'zai' in message) and ('team tech' in message or 'team Tech' in message or 'team' in message):
                 trai = ['Thông','Tùng','Phong','Đức',"Hoà Lê",'Hoà Nguyễn','Hoàng','Hạt','Duy','Tân','Đông','Trung']
                 
                 bot.sendMessage(chat_id=chat_id,text="Hẳn là thím... "+ trai[random.randrange(len(trai)-1)] + " " + telegram.Emoji.PILE_OF_POO)
@@ -130,11 +130,14 @@ def echo(bot):
                 time.sleep(3)
                 bot.sendMessage(chat_id=chat_id,text="À vẫn không! ĐẸP TRAI NHẤT PHẢI LÀ THÍM "+ trai[random.randrange(len(trai)-1)] + " " + telegram.Emoji.PILE_OF_POO)
 
-            if 'ai đẹp gái nhất team tech' in message or 'ai xinh gái nhất team tech' in message:
+            if ('ai đẹp gái nhất' in message or 'ai xinh gái nhất' in message or 'Ai đẹp gái nhất' in message or 'Ai xinh gái nhất' in message) and ('team tech' in message or 'team Tech' in message or 'team' in message):
                 gai = ['Bích',"Vi",'Giàu','Khanh']
                 bot.sendMessage(chat_id=chat_id,text="Thím kia ngươi ở trên server... Người đẹp nhất trần hẳn là... "+ gai[random.randrange(len(gai)-1)] + " " + telegram.Emoji.WINKING_FACE)
                 time.sleep(5)
                 bot.sendMessage(chat_id=chat_id,text="Ta nói giỡn, chứ nữ team Tech ai cũng xinh đẹp rạng ngời "+ telegram.Emoji.WINKING_FACE)
+
+            if 'đẹp' in message and 'hông' in message:
+                bot.sendMessage(chat_id=chat_id,text="Nghĩ sao ai mà đẹp được bằng thím "+ telegram.Emoji.WINKING_FACE)
 
             if message == "/chaothim" or message =="Chào thím":
                 ways = ['Annyeong haseyooooo',"Hếlôôôôôôô", "Bông giuaaa",'Sawadikaaaapppp','Konnichiwaaaaa ']
