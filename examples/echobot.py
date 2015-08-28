@@ -66,6 +66,7 @@ def main():
 
     while True:
         echo(bot)
+        alert(bot)
         time.sleep(1)
 
 
@@ -88,25 +89,13 @@ def echo(bot):
                 message = message.replace('@ThimBot','')
 
             # Almighty New Relic Alert ====================================
-            newRelicFeed = feedparser.parse('https://rpm.newrelic.com/accounts/857072/applications/9351884/incidents.rss?data_access_key=b5e5145b73b9a5c571843470b1c87ddad1aa11ae0b724a5')
-            
-            latestAlert = newRelicFeed.entries[0]['link']
-            global currAlert
-            isUpdated = (currAlert != latestAlert)
             
             if message == '/getAlert':
+                newRelicFeed = feedparser.parse('https://rpm.newrelic.com/accounts/857072/applications/9351884/incidents.rss?data_access_key=b5e5145b73b9a5c571843470b1c87ddad1aa11ae0b724a5')
+                
                 fullAlert = newRelicFeed.entries[0]
-                alertText = '================= NewRelic Alert =================\n\n' + fullAlert['title'] + "\n" + fullAlert['description'] 
+                alertText = '================= NewRelic Alert =================\n\n' + fullAlert['title'] + "\n" + fullAlert['description'] + '\n\n'
                 bot.sendMessage(chat_id=chat_id,text=alertText)
-
-            if isUpdated:
-                # Send alert
-                fullAlert = newRelicFeed.entries[0]
-                alertText = '================= NewRelic Alert =================\n\n' + fullAlert['title'] + "\n" + fullAlert['description'] 
-                bot.sendMessage(chat_id=chat_id,text=alertText)
-
-                # Update latest alert
-                currAlert = latestAlert
 
             # End almighty New Relic Alert ====================================
 
@@ -371,6 +360,27 @@ def echo(bot):
                 bot.sendMessage(chat_id=chat_id,text="Kết quả đầu tiên: " + gotoUrl)
                 
             LAST_UPDATE_ID = update.update_id
+
+def alert(bot):
+    global LAST_UPDATE_ID
+    # chat_id is required to reply any message
+    chat_id = -9146500 #All Stars
+    #chat_id = -39735091 #Test bot
+    # Almighty New Relic Alert ====================================
+    newRelicFeed = feedparser.parse('https://rpm.newrelic.com/accounts/857072/applications/9351884/incidents.rss?data_access_key=b5e5145b73b9a5c571843470b1c87ddad1aa11ae0b724a5')
+    
+    latestAlert = newRelicFeed.entries[0]['link']
+    global currAlert
+    isUpdated = (currAlert != latestAlert)
+
+    if isUpdated:
+        # Send alert
+        fullAlert = newRelicFeed.entries[0]
+        alertText = '================= NewRelic Alert =================\n\n' + fullAlert['title'] + "\n" + fullAlert['description']  + '\n\n'
+        bot.sendMessage(chat_id=chat_id,text=alertText)
+
+        # Update latest alert
+        currAlert = latestAlert
 
 if __name__ == '__main__':
     main()
