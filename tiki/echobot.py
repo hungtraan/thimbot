@@ -56,6 +56,10 @@ def echo(bot):
     # Request updates from last updated_id
     for update in bot.getUpdates(offset=LAST_UPDATE_ID):
         if LAST_UPDATE_ID < update.update_id:
+            """
+            Set LAST_UPDATE_ID for next request
+            """
+            LAST_UPDATE_ID = update.update_id
             # chat_id is required to reply any message
             first_name = update.message.from_user.first_name.encode('utf-8')
             last_name = update.message.from_user.last_name.encode('utf-8')
@@ -65,25 +69,34 @@ def echo(bot):
 
             # Define function to response message to telegram
             def response(message):
-                bot.sendMessage(chat_id=chat_id, text=message)
-                LAST_UPDATE_ID = update.update_id
+                if (message):
+                    bot.sendMessage(chat_id=chat_id, text=message)
+                else:
+                    pass
 
             # Process with equall message
             libEqual = Equal()
             equalMethods = dir(libEqual)
             if message in equalMethods:
-                result = getattr(libEqual, message)()
-                response(result)
+                try:
+                    result = getattr(libEqual, message)()
+                    response(result)
 
-            # Process with startswith command
-            if message.startswith('a'):
-                libStartswith = Startswith()
+                    return
+                except Exception as e:
+                    pass
+
+            # Process with startswith '/' => command with params
+            if message.startswith('/'):
+                libStartswith = Startswith(message)
                 # Get command string
                 command = message.split(' ')[0][1:]
                 # Call function from lib depends on command
                 try:
                     result = getattr(libStartswith, command)()
                     response(result)
+
+                    return
                 except Exception as e:
                     pass
 
@@ -95,9 +108,11 @@ def echo(bot):
                     try:
                         result = getattr(libInMessage, method)()
                         response(result)
+
+                        return
                     except Exception as e:
                         pass
-            return
+
 
 def alert(bot):
     global LAST_UPDATE_ID
