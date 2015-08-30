@@ -32,7 +32,7 @@ end
 # unset irrelevant variables
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/Users/mac/Workspace/Telegram-bot/python-telegram-bot/venv"
+set -gx VIRTUAL_ENV "/private/var/www/thimbot/venv"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH
