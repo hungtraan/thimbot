@@ -181,17 +181,19 @@ def echo(bot):
                 #LAST_UPDATE_ID = update.update_id
 
             if message == "/omg":
-                bot.sendMessage(chat_id=chat_id,text="Con cứ bình tĩnh +"+first_name+" à, mọi việc sẽ ổn cả thôi "+ telegram.Emoji.RELIEVED_FACE)
+                bot.sendMessage(chat_id=chat_id,text="Con cứ bình tĩnh "+first_name+" à, mọi việc sẽ ổn cả thôi "+ telegram.Emoji.RELIEVED_FACE)
 
-                #LAST_UPDATE_ID = update.update_id
+            if message == "/whereisthim":
+                bot.sendMessage(chat_id=chat_id,text="Ta đây, con cần gì, "+ first_name + "? " +telegram.Emoji.RELIEVED_FACE)
+            
+            if message == "ê thím":
+                bot.sendMessage(chat_id=chat_id,text="Tên "+ first_name + "kia, sao dám gọi Thánh Thím ta như dzậy hả? " +telegram.Emoji.ANGRY_FACE)
 
             if message == "/whereisthim":
                 bot.sendMessage(chat_id=chat_id,text="Ta đây, con cần gì, "+ first_name + "? " +telegram.Emoji.RELIEVED_FACE)
 
-                #LAST_UPDATE_ID = update.update_id
-
             if "thím ơi" in message or "Thím ơi" in message:
-                oiReplies = ["Ta đây, con cần gì, ","Wểi... ","Ai gọi ta đó, có ta đâyyyyy "]
+                oiReplies = ["Ta đây, con cần gì, ","Wểi... ","Ai gọi ta đó, có ta đâyyyyy ",'Annyeong haseyooooo ',"Hếlôôôôôôô ", "Bông giuaaa ",'Sawadikaaaapppp ','Konnichiwaaaaa ']
                 bot.sendMessage(chat_id=chat_id,text= oiReplies[random.randrange(len(oiReplies))]+ first_name + "? " +telegram.Emoji.RELIEVED_FACE)
 
                 #LAST_UPDATE_ID = update.update_id
@@ -206,10 +208,26 @@ def echo(bot):
                 sass = ["Thôi đi thím "+first_name + ", bày đặt cười hiền... ", "Có vẻ giả tạo nha thím "+first_name + " :) ",":) :) :) :) "+first_name + " :) :) :) ", "Có đẹp bằng Thánh Thím ta không mà đòi cười hiền hả "+first_name + " :) ",":) cái wừng... "]
                 bot.sendMessage(chat_id=chat_id,text=sass[random.randrange(0,len(sass)-1)] + telegram.Emoji.PILE_OF_POO)
 
+            if ":-s" in message:
+                bot.sendMessage(chat_id=chat_id,text="Bình tĩnh nào " + first_name + " ơi " +telegram.Emoji.VICTORY_HAND)
+
+            if b'\xF0\x9F\x91\x8D' in message or "(y)" in message:
+                bot.sendMessage(chat_id=chat_id,text="Ohh yeahhh thím cũng đồng ý với con đó " + first_name + " " +telegram.Emoji.THUMBS_UP_SIGN+telegram.Emoji.THUMBS_UP_SIGN+telegram.Emoji.THUMBS_UP_SIGN)
+
+            if "bai" in message or "bye" in message:
+                bot.sendMessage(chat_id=chat_id,text="Thím cho mi lui đó " + first_name + " " +telegram.Emoji.UNAMUSED_FACE+telegram.Emoji.SMIRKING_FACE)
+
+            if "thím Thông" in message:
+                bot.sendMessage(chat_id=chat_id,text="Ai nhắc đến người thanh niên bụng bự mong manh dễ vỡ đó đó đó đó?? Chọc thím ấy là Thánh Thím ta không tha cho đâu nhaaa " +telegram.Emoji.UNAMUSED_FACE)
+            
+            if "bình tĩnh" in message:
+                bot.sendMessage(chat_id=chat_id,text="Đúng rồi, làm cái wừng gì mà rần rần lên dzậy hà? Mợt quá nhaaa " +telegram.Emoji.UNAMUSED_FACE)
+
+            if telegram.Emoji.UNAMUSED_FACE in message:
+                bot.sendMessage(chat_id=chat_id,text="Thôi đuê, đừng có ở đó bày đặt làm mặt ngầu như ta " +telegram.Emoji.UNAMUSED_FACE)
+
             if message == '/fthim':
                 bot.sendMessage(chat_id=chat_id,text="Lượn đi cho nước nó trong "+ first_name + " à " +telegram.Emoji.RELIEVED_FACE)
-
-                #LAST_UPDATE_ID = update.update_id
 
             if message == '/thimui':
                 bot.sendMessage(chat_id=chat_id,text="http://uimovement.com/ui/"+str(random.randrange(1,170)))
