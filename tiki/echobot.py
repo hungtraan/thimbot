@@ -18,6 +18,7 @@
 import inspect
 
 import logging
+import sqlite3
 import telegram
 import time
 import datetime
@@ -74,10 +75,26 @@ def echo(bot):
                 else:
                     pass
 
-            # Process with equall message
+
             libEqual = Equal()
+            # Process with list command in db
+            conn = sqlite3.connect('tiki.db')
+            c = conn.cursor()
+            c.execute('SELECT command FROM messages')
+            commands = c.fetchall()
+
+            if message in commands:
+                try:
+                    result = libEqual.command(message)
+                    response(result)
+
+                    return
+                except Exception as e:
+                    pass
+
+            # Process with equal message
             equalMethods = dir(libEqual)
-            if message in equalMethods:
+            if message in equalMethods and message != 'command':
                 try:
                     result = getattr(libEqual, message)()
                     response(result)
