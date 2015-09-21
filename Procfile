@@ -1,2 +1,2 @@
-worker: python examples/echobot.py
+worker: python run.py echobot
 
