@@ -86,10 +86,10 @@ def echo(bot):
             commands = c.fetchall()
 
             for row in commands:
-                if message == row[0]:
+                if row[0].encode('utf-8') in message:
                     try:
                         params = [first_name, last_name, user_id]
-                        result = libEqual.command(message, params)
+                        result = libEqual.command(row[0], params)
                         response(result)
 
                         return
