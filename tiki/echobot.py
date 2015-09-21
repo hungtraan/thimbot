@@ -68,6 +68,8 @@ def echo(bot):
             message = update.message.text.encode('utf-8')
             user_id = update.message.from_user.id
 
+            print(message)
+
             # Define function to response message to telegram
             def response(message):
                 if (message):
@@ -83,14 +85,17 @@ def echo(bot):
             c.execute('SELECT command FROM messages')
             commands = c.fetchall()
 
-            if message in commands:
-                try:
-                    result = libEqual.command(message)
-                    response(result)
+            for row in commands:
+                if message == row[0]:
+                    try:
+                        params = [first_name, last_name, user_id]
+                        result = libEqual.command(message, params)
+                        response(result)
 
-                    return
-                except Exception as e:
-                    pass
+                        return
+                    except Exception as e:
+                        print(e)
+                        pass
 
             # Process with equal message
             equalMethods = dir(libEqual)
