@@ -1,4 +1,4 @@
-#!/Users/mac/Workspace/Telegram-bot/python-telegram-bot/venv/bin/python
+#!/private/var/www/thimbot/venv/bin/python
 
 # -*- coding: utf-8 -*-
 import re
