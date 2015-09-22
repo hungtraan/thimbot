@@ -23,6 +23,7 @@ import time
 import random
 import lxml.html
 from lxml.cssselect import CSSSelector
+import urllib2
 import urllib
 import re
 import operator
@@ -329,15 +330,19 @@ def echo(bot):
                 
                 bot.sendMessage(chat_id=chat_id,text="Kết quả đầu tiên: " + gotoUrl)
             
-            if '/thimgoogle' in message:
+            if '/thimnghenhac' in message:
                 if len(message.split()) < 2 :
-                    bot.sendMessage(chat_id=chat_id,text="Cú pháp để hỏi ta là: /thimgoogle từ muốn kiếm")
+                    bot.sendMessage(chat_id=chat_id,text="Cú pháp để hỏi ta là: /thimnghenhac từ muốn kiếm")
                     LAST_UPDATE_ID = update.update_id
                     return
 
                 query = ' '.join(message.split()[1:])
+                opener = urllib2.build_opener()
+                opener.addheaders = [('User-agent', 'Chrome/41.0.2228.0')]
+
                 url = "https://www.google.com/search?es_th=1&q="+urllib.quote(query)+"&rct=j&qscrl=1"
-                resultPage = urllib.urlopen(url).read()
+                # resultPage = urllib.urlopen(url).read()
+                resultPage = opener.open(url).read()
 
                 if "did not match any documents" in resultPage:
                     bot.sendMessage(chat_id=chat_id,text="Thím hổng tìm ra gì trên Google cho cái này :(")
@@ -348,34 +353,23 @@ def echo(bot):
                 tree = lxml.html.fromstring(resultPage)
 
                 # construct a CSS Selector
-                sel = CSSSelector('.r > a')
+                sel = CSSSelector('h3.r > a')
 
                 # Apply the selector to the DOM tree.
                 results = sel(tree)
-                # print the HTML for the first result.
-                firstResult = results[0]
-                sel2 = CSSSelector('li>div>a')
+                firstResult = results[1]
+                astr = lxml.html.tostring(firstResult)
 
-                a = sel2(firstResult)
-                astr = lxml.html.tostring(a[0])
-
-                href = re.search("(\"\/wiki\/)(.*?)\"",astr)
-                gotoUrl = "http://"+lang+".wikipedia.org"+ href.group(0)[1:-1]
+                href = re.search("(q\=.*?\&)",astr)
+                gotoUrl = href.group(0)[2:-1]
+                unEscaper = {'%20':' ','%3C':'<','%3E':'>','%23':'#', '%25':'%','%7B':'{','%7D':'}','%7C':'|', '%5C':"\\",'%5E':'^','%7E':'~' ,'%5B':'[' ,'%5D':']', '%60':'`','%3B':';','%2F':'/','%3F':'?' ,'%3A':':' ,'%40':'@','%3D':'=', '%26':'&','%24':'$'}
+                for key, value in unEscaper.iteritems():
+                    if key in gotoUrl:
+                        gotoUrl = gotoUrl.replace(key, value)
                 
-                #wikiPage = urllib.urlopen(gotoUrl).read()
-
-                # build the DOM Tree
-                #wtree = lxml.html.fromstring(wikiPage)
-
-                # construct a CSS Selector
-                #wsel = CSSSelector('#mw-content-text > p:nth-child(4)')
-
-                # Apply the selector to the DOM tree.
-                #firstParagraph = lxml.html.tostring(wsel(wtree)[0])
-                #firstParagraph = re.sub("<.*?>", " ", firstParagraph).encode('utf-8')
-                #print firstParagraph
+                print gotoUrl
                 
-                bot.sendMessage(chat_id=chat_id,text="Kết quả đầu tiên: " + gotoUrl)
+                bot.sendMessage(chat_id=chat_id,text="Đây hẳn là... " + gotoUrl)
                 
             LAST_UPDATE_ID = update.update_id
 
