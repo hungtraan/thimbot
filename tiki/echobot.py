@@ -120,6 +120,7 @@ def echo(bot):
 
                     return
                 except Exception as e:
+                    print(e)
                     pass
 
             # Process with in message command

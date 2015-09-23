@@ -4,6 +4,7 @@ import re
 import urllib
 import lxml.html
 from lxml.cssselect import CSSSelector
+import re
 
 
 class Startswith:
@@ -64,5 +65,15 @@ class Startswith:
     def abc(self):
         print(self.__getStringParams())
         return
+
+    def youtube(self):
+        print(self.__stringParams)
+
+        query = urllib.quote(self.__stringParams)
+        html_content = urllib.urlopen("http://www.youtube.com/results?search_query=" + query)
+        search_results = re.findall(r'href=\"\/watch\?v=(.{11})', html_content.read())
+        print(search_results)
+
+        return "http://www.youtube.com/watch?v=" + search_results[0]
 
 
