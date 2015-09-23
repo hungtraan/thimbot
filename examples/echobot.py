@@ -30,6 +30,7 @@ import operator
 import datetime
 import sys
 import feedparser
+import os
 
 LAST_UPDATE_ID = None
 
@@ -238,8 +239,8 @@ def echo(bot):
                 bot.sendMessage(chat_id=chat_id,text="http://www.producthunt.com/tech/"+str(random.randrange(1,31396)))
                 #LAST_UPDATE_ID = update.update_id
 
-            if message == '/thimdaudo' or 'đậu đỏ' in message:
-                return
+            if '/thimdaudo' in message or 'đậu đỏ' in message:
+                script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
                 daudoPhotos = {'aotuong':'../assets/img/aotuong.jpg',
                                 'dethuong':'../assets/img/aotuong.jpg',
                                 'nhiemmau':'../assets/img/nhiemmau.jpg',
@@ -251,28 +252,29 @@ def echo(bot):
                 if len(message.split()) == 1:
                     #Error handling
                     try:
-                        bot.sendPhoto(chat_id=chat_id, photo=random.choice(daudoPhotos.values()))
-                    except: # catch *all* exceptions
-                        e = sys.exc_info()[0]
-                        write_to_page( "<p>Error: %s</p>" % e )
-                    
+                        bot.sendPhoto(chat_id=chat_id, photo=open(os.path.join(script_dir, random.choice(daudoPhotos.values())),'rb'))
+                    except Exception as e: # catch *all* exceptions
+                        print e
+                        pass
                 else:
                     whichDau = message.split()[1]
                     if whichDau == 'help':
                         for key in daudoPhotos.keys():
-                            listDau += key + "\n"
+                            listDau += key+"\n"
+                        bot.sendMessage(chat_id=chat_id,
+                            text="Thím có các bạn đậu đỏ sau đâu:\n"+listDau)
                     elif whichDau in daudoPhotos:
                         try:
-                            bot.sendPhoto(chat_id=chat_id, photo=daudoPhotos[whichDau])
-                        except: # catch *all* exceptions
-                            e = sys.exc_info()[0]
-                            write_to_page( "<p>Error: %s</p>" % e )
+                            bot.sendPhoto(chat_id=chat_id, photo=open(os.path.join(script_dir,daudoPhotos[whichDau]),'rb'))
+                        except Exception as e: # catch *all* exceptions
+                            print e
+                            pass
                     else:
                         try:
-                            bot.sendPhoto(chat_id=chat_id, photo=random.choice(daudoPhotos.values()))
-                        except: # catch *all* exceptions
-                            e = sys.exc_info()[0]
-                            write_to_page( "<p>Error: %s</p>" % e )
+                            bot.sendPhoto(chat_id=chat_id, photo=open(os.path.join(script_dir,random.choice(daudoPhotos.values())),'rb'))
+                        except Exception as e: # catch *all* exceptions
+                            print e
+                            pass
 
             if '/thimwiki' in message:
                 if len(message.split()) < 2 :
