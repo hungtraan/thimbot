@@ -17,7 +17,7 @@ class Equal:
         message = c.fetchone()
         print(message)
         # return row
-        template = Template(message[0].encode('utf-8'))
+        template = Template(message[0])
         result = template.render(firstname=params[0], lastname=params[1], userid=params[2]).encode('utf-8', 'ignore')
         print("result render:", result)
 
