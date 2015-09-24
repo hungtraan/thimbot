@@ -1,7 +1,12 @@
 #!/usr/bin/env python
+# -- coding: utf-8 --
 #import sqlite3
 from jinja2 import Template
 import MySQLdb
+import sys  
+
+reload(sys)  
+sys.setdefaultencoding('utf8')
 
 class Equal:
     """etc."""
