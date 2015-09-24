@@ -5,6 +5,7 @@ import urllib
 import lxml.html
 from lxml.cssselect import CSSSelector
 import re
+import MySQLdb
 
 
 class Startswith:
@@ -75,5 +76,22 @@ class Startswith:
         print(search_results)
 
         return "http://www.youtube.com/watch?v=" + search_results[0]
+
+    def daythim(self):
+        print(self.__stringParams)
+        teachCommand = self.__stringParams.split('|')[0]
+        teachResponse = self.__stringParams.split('|')[1]
+
+        db=MySQLdb.connect(host="us-cdbr-iron-east-02.cleardb.net",user="b8f6b4fd2b4d9a", passwd="c8f62d56",db="heroku_e85d0d17ea44950",charset='utf8',use_unicode=True)
+        # Process with list command in db
+        c = db.cursor()
+        try:
+            sql_cmd = "INSERT INTO messages (id,command,response) VALUES (null,\"" +teachCommand.decode('utf-8') + "\",\"" + teachResponse.decode('utf-8') + "\")"
+            c.execute(sql_cmd)
+            db.commit()
+        except Exception as e:
+            print(e)
+            print sql_cmd
+            pass
 
 
