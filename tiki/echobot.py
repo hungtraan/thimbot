@@ -18,7 +18,8 @@
 import inspect
 
 import logging
-import sqlite3
+#import sqlite3
+import MySQLdb
 import telegram
 import time
 import datetime
@@ -37,7 +38,7 @@ def main():
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
     # Telegram Bot Authorization Token
-    bot = telegram.Bot('127546764:AAH2odfpjrrjTvcsKWbia2EIWdmvfWFIVZ0')
+    bot = telegram.Bot('82438901:AAFgzYUb4pQ_1qabUqY7fLJpBd4Ne7vJfLk')
 
     # This will be our global variable to keep the latest update_id when requesting
     # for updates. It starts with the latest update_id if available.
@@ -79,21 +80,28 @@ def echo(bot):
 
 
             libEqual = Equal()
+
+            # Alternative connection to Heroku mysql db
+            db=MySQLdb.connect(host="us-cdbr-iron-east-02.cleardb.net",user="b8f6b4fd2b4d9a", passwd="c8f62d56",db="heroku_e85d0d17ea44950",charset='utf8',use_unicode=True)
+
             # Process with list command in db
-            conn = sqlite3.connect('tiki.db')
-            c = conn.cursor()
+            c = db.cursor()
             c.execute('SELECT command FROM messages')
             commands = c.fetchall()
 
             for row in commands:
                 if row[0].encode('utf-8') in message:
+                    print('in')
+                    print(row[0])
                     try:
                         params = [first_name, last_name, user_id]
                         result = libEqual.command(row[0], params)
+                        print("resule", result)
                         response(result)
 
                         return
                     except Exception as e:
+                        print row[0]
                         print(e)
                         pass
 

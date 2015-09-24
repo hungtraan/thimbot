@@ -23,12 +23,14 @@ import time
 import random
 import lxml.html
 from lxml.cssselect import CSSSelector
+import urllib2
 import urllib
 import re
 import operator
 import datetime
 import sys
 import feedparser
+import os
 
 LAST_UPDATE_ID = None
 
@@ -181,17 +183,19 @@ def echo(bot):
                 #LAST_UPDATE_ID = update.update_id
 
             if message == "/omg":
-                bot.sendMessage(chat_id=chat_id,text="Con cứ bình tĩnh +"+first_name+" à, mọi việc sẽ ổn cả thôi "+ telegram.Emoji.RELIEVED_FACE)
+                bot.sendMessage(chat_id=chat_id,text="Con cứ bình tĩnh "+first_name+" à, mọi việc sẽ ổn cả thôi "+ telegram.Emoji.RELIEVED_FACE)
 
-                #LAST_UPDATE_ID = update.update_id
+            if message == "/whereisthim":
+                bot.sendMessage(chat_id=chat_id,text="Ta đây, con cần gì, "+ first_name + "? " +telegram.Emoji.RELIEVED_FACE)
+            
+            if message == "ê thím":
+                bot.sendMessage(chat_id=chat_id,text="Tên "+ first_name + "kia, sao dám gọi Thánh Thím ta như dzậy hả? " +telegram.Emoji.ANGRY_FACE)
 
             if message == "/whereisthim":
                 bot.sendMessage(chat_id=chat_id,text="Ta đây, con cần gì, "+ first_name + "? " +telegram.Emoji.RELIEVED_FACE)
 
-                #LAST_UPDATE_ID = update.update_id
-
             if "thím ơi" in message or "Thím ơi" in message:
-                oiReplies = ["Ta đây, con cần gì, ","Wểi... ","Ai gọi ta đó, có ta đâyyyyy "]
+                oiReplies = ["Ta đây, con cần gì, ","Wểi... ","Ai gọi ta đó, có ta đâyyyyy ",'Annyeong haseyooooo ',"Hếlôôôôôôô ", "Bông giuaaa ",'Sawadikaaaapppp ','Konnichiwaaaaa ']
                 bot.sendMessage(chat_id=chat_id,text= oiReplies[random.randrange(len(oiReplies))]+ first_name + "? " +telegram.Emoji.RELIEVED_FACE)
 
                 #LAST_UPDATE_ID = update.update_id
@@ -206,10 +210,26 @@ def echo(bot):
                 sass = ["Thôi đi thím "+first_name + ", bày đặt cười hiền... ", "Có vẻ giả tạo nha thím "+first_name + " :) ",":) :) :) :) "+first_name + " :) :) :) ", "Có đẹp bằng Thánh Thím ta không mà đòi cười hiền hả "+first_name + " :) ",":) cái wừng... "]
                 bot.sendMessage(chat_id=chat_id,text=sass[random.randrange(0,len(sass)-1)] + telegram.Emoji.PILE_OF_POO)
 
+            if ":-s" in message:
+                bot.sendMessage(chat_id=chat_id,text="Bình tĩnh nào " + first_name + " ơi " +telegram.Emoji.VICTORY_HAND)
+
+            if b'\xF0\x9F\x91\x8D' in message or "(y)" in message:
+                bot.sendMessage(chat_id=chat_id,text="Ohh yeahhh thím cũng đồng ý với con đó " + first_name + " " +telegram.Emoji.THUMBS_UP_SIGN+telegram.Emoji.THUMBS_UP_SIGN+telegram.Emoji.THUMBS_UP_SIGN)
+
+            if "bai" in message or "bye" in message:
+                bot.sendMessage(chat_id=chat_id,text="Thím cho mi lui đó " + first_name + " " +telegram.Emoji.UNAMUSED_FACE+telegram.Emoji.SMIRKING_FACE)
+
+            if "thím Thông" in message:
+                bot.sendMessage(chat_id=chat_id,text="Ai nhắc đến người thanh niên bụng bự mong manh dễ vỡ đó đó đó đó?? Chọc thím ấy là Thánh Thím ta không tha cho đâu nhaaa " +telegram.Emoji.UNAMUSED_FACE)
+            
+            if "bình tĩnh" in message:
+                bot.sendMessage(chat_id=chat_id,text="Đúng rồi, làm cái wừng gì mà rần rần lên dzậy hà? Mợt quá nhaaa " +telegram.Emoji.UNAMUSED_FACE)
+
+            if telegram.Emoji.UNAMUSED_FACE in message:
+                bot.sendMessage(chat_id=chat_id,text="Thôi đuê, đừng có ở đó bày đặt làm mặt ngầu như ta " +telegram.Emoji.UNAMUSED_FACE)
+
             if message == '/fthim':
                 bot.sendMessage(chat_id=chat_id,text="Lượn đi cho nước nó trong "+ first_name + " à " +telegram.Emoji.RELIEVED_FACE)
-
-                #LAST_UPDATE_ID = update.update_id
 
             if message == '/thimui':
                 bot.sendMessage(chat_id=chat_id,text="http://uimovement.com/ui/"+str(random.randrange(1,170)))
@@ -219,8 +239,8 @@ def echo(bot):
                 bot.sendMessage(chat_id=chat_id,text="http://www.producthunt.com/tech/"+str(random.randrange(1,31396)))
                 #LAST_UPDATE_ID = update.update_id
 
-            if message == '/thimdaudo' or 'đậu đỏ' in message:
-                return
+            if '/thimdaudo' in message or 'đậu đỏ' in message:
+                script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
                 daudoPhotos = {'aotuong':'../assets/img/aotuong.jpg',
                                 'dethuong':'../assets/img/aotuong.jpg',
                                 'nhiemmau':'../assets/img/nhiemmau.jpg',
@@ -232,28 +252,29 @@ def echo(bot):
                 if len(message.split()) == 1:
                     #Error handling
                     try:
-                        bot.sendPhoto(chat_id=chat_id, photo=random.choice(daudoPhotos.values()))
-                    except: # catch *all* exceptions
-                        e = sys.exc_info()[0]
-                        write_to_page( "<p>Error: %s</p>" % e )
-                    
+                        bot.sendPhoto(chat_id=chat_id, photo=open(os.path.join(script_dir, random.choice(daudoPhotos.values())),'rb'))
+                    except Exception as e: # catch *all* exceptions
+                        print e
+                        pass
                 else:
                     whichDau = message.split()[1]
                     if whichDau == 'help':
                         for key in daudoPhotos.keys():
-                            listDau += key + "\n"
+                            listDau += key+"\n"
+                        bot.sendMessage(chat_id=chat_id,
+                            text="Thím có các bạn đậu đỏ sau đâu:\n"+listDau)
                     elif whichDau in daudoPhotos:
                         try:
-                            bot.sendPhoto(chat_id=chat_id, photo=daudoPhotos[whichDau])
-                        except: # catch *all* exceptions
-                            e = sys.exc_info()[0]
-                            write_to_page( "<p>Error: %s</p>" % e )
+                            bot.sendPhoto(chat_id=chat_id, photo=open(os.path.join(script_dir,daudoPhotos[whichDau]),'rb'))
+                        except Exception as e: # catch *all* exceptions
+                            print e
+                            pass
                     else:
                         try:
-                            bot.sendPhoto(chat_id=chat_id, photo=random.choice(daudoPhotos.values()))
-                        except: # catch *all* exceptions
-                            e = sys.exc_info()[0]
-                            write_to_page( "<p>Error: %s</p>" % e )
+                            bot.sendPhoto(chat_id=chat_id, photo=open(os.path.join(script_dir,random.choice(daudoPhotos.values())),'rb'))
+                        except Exception as e: # catch *all* exceptions
+                            print e
+                            pass
 
             if '/thimwiki' in message:
                 if len(message.split()) < 2 :
@@ -311,15 +332,19 @@ def echo(bot):
                 
                 bot.sendMessage(chat_id=chat_id,text="Kết quả đầu tiên: " + gotoUrl)
             
-            if '/thimgoogle' in message:
+            if '/thimnghenhac' in message:
                 if len(message.split()) < 2 :
-                    bot.sendMessage(chat_id=chat_id,text="Cú pháp để hỏi ta là: /thimgoogle từ muốn kiếm")
+                    bot.sendMessage(chat_id=chat_id,text="Cú pháp để hỏi ta là: /thimnghenhac từ muốn kiếm")
                     LAST_UPDATE_ID = update.update_id
                     return
 
                 query = ' '.join(message.split()[1:])
+                opener = urllib2.build_opener()
+                opener.addheaders = [('User-agent', 'Chrome/41.0.2228.0')]
+
                 url = "https://www.google.com/search?es_th=1&q="+urllib.quote(query)+"&rct=j&qscrl=1"
-                resultPage = urllib.urlopen(url).read()
+                # resultPage = urllib.urlopen(url).read()
+                resultPage = opener.open(url).read()
 
                 if "did not match any documents" in resultPage:
                     bot.sendMessage(chat_id=chat_id,text="Thím hổng tìm ra gì trên Google cho cái này :(")
@@ -330,34 +355,23 @@ def echo(bot):
                 tree = lxml.html.fromstring(resultPage)
 
                 # construct a CSS Selector
-                sel = CSSSelector('.r > a')
+                sel = CSSSelector('h3.r > a')
 
                 # Apply the selector to the DOM tree.
                 results = sel(tree)
-                # print the HTML for the first result.
-                firstResult = results[0]
-                sel2 = CSSSelector('li>div>a')
+                firstResult = results[1]
+                astr = lxml.html.tostring(firstResult)
 
-                a = sel2(firstResult)
-                astr = lxml.html.tostring(a[0])
-
-                href = re.search("(\"\/wiki\/)(.*?)\"",astr)
-                gotoUrl = "http://"+lang+".wikipedia.org"+ href.group(0)[1:-1]
+                href = re.search("(q\=.*?\&)",astr)
+                gotoUrl = href.group(0)[2:-1]
+                unEscaper = {'%20':' ','%3C':'<','%3E':'>','%23':'#', '%25':'%','%7B':'{','%7D':'}','%7C':'|', '%5C':"\\",'%5E':'^','%7E':'~' ,'%5B':'[' ,'%5D':']', '%60':'`','%3B':';','%2F':'/','%3F':'?' ,'%3A':':' ,'%40':'@','%3D':'=', '%26':'&','%24':'$'}
+                for key, value in unEscaper.iteritems():
+                    if key in gotoUrl:
+                        gotoUrl = gotoUrl.replace(key, value)
                 
-                #wikiPage = urllib.urlopen(gotoUrl).read()
-
-                # build the DOM Tree
-                #wtree = lxml.html.fromstring(wikiPage)
-
-                # construct a CSS Selector
-                #wsel = CSSSelector('#mw-content-text > p:nth-child(4)')
-
-                # Apply the selector to the DOM tree.
-                #firstParagraph = lxml.html.tostring(wsel(wtree)[0])
-                #firstParagraph = re.sub("<.*?>", " ", firstParagraph).encode('utf-8')
-                #print firstParagraph
+                print gotoUrl
                 
-                bot.sendMessage(chat_id=chat_id,text="Kết quả đầu tiên: " + gotoUrl)
+                bot.sendMessage(chat_id=chat_id,text="Đây hẳn là... " + gotoUrl)
                 
             LAST_UPDATE_ID = update.update_id
 
