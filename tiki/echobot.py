@@ -28,6 +28,7 @@ from tiki.inmessage import InMessage
 from tiki.startswith import Startswith
 
 LAST_UPDATE_ID = None
+dict = {}
 
 
 def main():
@@ -40,6 +41,13 @@ def main():
     # Telegram Bot Authorization Token
     bot = telegram.Bot('82438901:AAFgzYUb4pQ_1qabUqY7fLJpBd4Ne7vJfLk')
 
+
+    global dict
+    for i in dir(telegram.Emoji):
+        if (i.startswith('_') == False):
+            dict[i]= getattr(telegram.Emoji, i)
+
+    #print dict['TWISTED_RIGHTWARDS_ARROWS']        
     # This will be our global variable to keep the latest update_id when requesting
     # for updates. It starts with the latest update_id if available.
     try:
@@ -69,7 +77,7 @@ def echo(bot):
             message = update.message.text.encode('utf-8')
             user_id = update.message.from_user.id
 
-            print(message)
+            #print(message)
 
             # Define function to response message to telegram
             def response(message):
@@ -94,14 +102,17 @@ def echo(bot):
                     print('in')
                     print(row[0])
                     try:
-                        params = [first_name, last_name, user_id]
-                        result = libEqual.command(row[0], params)
-                        print("resule", result)
+                        global dict
+                        dict['firstname'] = first_name
+                        dict['lastname'] = last_name
+                        dict['user_id'] = user_id
+                        result = libEqual.command(row[0], dict)
+                        print "result"
+                        print result
                         response(result)
 
                         return
                     except Exception as e:
-                        print row[0]
                         print(e)
                         pass
 
