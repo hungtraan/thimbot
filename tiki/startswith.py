@@ -86,12 +86,17 @@ class Startswith:
         # Process with list command in db
         c = db.cursor()
         try:
-            sql_cmd = "INSERT INTO messages (id,command,response) VALUES (null,\"" +teachCommand.decode('utf-8') + "\",\"" + teachResponse.decode('utf-8') + "\")"
-            c.execute(sql_cmd)
+            c.execute("SELECT response FROM messages WHERE command=%s", [teachCommand.decode('utf-8')])
+            if c.fetchone():  # command exists
+                print "update"
+                c.execute("UPDATE messages SET response=%s WHERE command=%s", [teachResponse.decode('utf-8'), teachCommand.decode('utf-8')])
+            else:
+                print "insert"
+                sql_cmd = "INSERT INTO messages (id,command,response) VALUES (null,\"" +teachCommand.decode('utf-8') + "\",\"" + teachResponse.decode('utf-8') + "\")"
+                c.execute(sql_cmd)
             db.commit()
         except Exception as e:
             print(e)
-            print sql_cmd
             pass
 
 

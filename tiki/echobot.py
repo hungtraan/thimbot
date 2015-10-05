@@ -28,6 +28,7 @@ from tiki.inmessage import InMessage
 from tiki.startswith import Startswith
 
 LAST_UPDATE_ID = None
+dict = {}
 
 
 def main():
@@ -39,11 +40,20 @@ def main():
 
     # Telegram Bot Authorization Token
     bot = telegram.Bot('82438901:AAFgzYUb4pQ_1qabUqY7fLJpBd4Ne7vJfLk')
+    #bot = telegram.Bot('127546764:AAH2odfpjrrjTvcsKWbia2EIWdmvfWFIVZ0')  # test hat bot
 
+
+    global dict
+    for i in dir(telegram.Emoji):
+        if (i.startswith('_') == False):
+            dict[i]= getattr(telegram.Emoji, i)
+
+    #print dict['TWISTED_RIGHTWARDS_ARROWS']        
     # This will be our global variable to keep the latest update_id when requesting
     # for updates. It starts with the latest update_id if available.
     try:
-        LAST_UPDATE_ID = bot.getUpdates()[-1].update_id
+        # not -1
+        LAST_UPDATE_ID = bot.getUpdates()[0].update_id
     except IndexError:
         LAST_UPDATE_ID = None
 
@@ -79,6 +89,22 @@ def echo(bot):
                     pass
 
 
+
+            # Process with startswith '/' FIRST => command with params
+            if message.startswith('/'):
+                libStartswith = Startswith(message)
+                # Get command string
+                command = message.split(' ')[0][1:]
+                # Call function from lib depends on command
+                try:
+                    result = getattr(libStartswith, command)()
+                    response(result)
+
+                    return
+                except Exception as e:
+                    print(e)
+                    pass
+
             libEqual = Equal()
 
             # Alternative connection to Heroku mysql db
@@ -94,14 +120,17 @@ def echo(bot):
                     print('in')
                     print(row[0])
                     try:
-                        params = [first_name, last_name, user_id]
-                        result = libEqual.command(row[0], params)
-                        print("resule", result)
+                        global dict
+                        dict['firstname'] = first_name
+                        dict['lastname'] = last_name
+                        dict['user_id'] = user_id
+                        result = libEqual.command(row[0], dict)
+                        print "result"
+                        print result
                         response(result)
 
                         return
                     except Exception as e:
-                        print row[0]
                         print(e)
                         pass
 
@@ -114,21 +143,6 @@ def echo(bot):
 
                     return
                 except Exception as e:
-                    pass
-
-            # Process with startswith '/' => command with params
-            if message.startswith('/'):
-                libStartswith = Startswith(message)
-                # Get command string
-                command = message.split(' ')[0][1:]
-                # Call function from lib depends on command
-                try:
-                    result = getattr(libStartswith, command)()
-                    response(result)
-
-                    return
-                except Exception as e:
-                    print(e)
                     pass
 
             # Process with in message command

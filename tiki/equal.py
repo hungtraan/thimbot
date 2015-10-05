@@ -20,10 +20,9 @@ class Equal:
         c = db.cursor()
         c.execute("SELECT response FROM messages WHERE command=%s", [command])
         message = c.fetchone()
-        print(message)
         # return row
         template = Template(message[0])
-        result = template.render(firstname=params[0], lastname=params[1], userid=params[2]).encode('utf-8', 'ignore')
-        print("result render:", result)
+        result = template.render(**params).encode('utf-8', 'ignore')
+        print result
 
         return result
