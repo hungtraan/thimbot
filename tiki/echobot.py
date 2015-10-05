@@ -39,7 +39,8 @@ def main():
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
     # Telegram Bot Authorization Token
-    bot = telegram.Bot('82438901:AAFgzYUb4pQ_1qabUqY7fLJpBd4Ne7vJfLk')
+    #bot = telegram.Bot('82438901:AAFgzYUb4pQ_1qabUqY7fLJpBd4Ne7vJfLk')
+    bot = telegram.Bot('127546764:AAH2odfpjrrjTvcsKWbia2EIWdmvfWFIVZ0')  # test hat bot
 
 
     global dict
@@ -51,7 +52,8 @@ def main():
     # This will be our global variable to keep the latest update_id when requesting
     # for updates. It starts with the latest update_id if available.
     try:
-        LAST_UPDATE_ID = bot.getUpdates()[-1].update_id
+        # not -1
+        LAST_UPDATE_ID = bot.getUpdates()[0].update_id
     except IndexError:
         LAST_UPDATE_ID = None
 
@@ -77,7 +79,7 @@ def echo(bot):
             message = update.message.text.encode('utf-8')
             user_id = update.message.from_user.id
 
-            #print(message)
+            print(message)
 
             # Define function to response message to telegram
             def response(message):
@@ -86,6 +88,22 @@ def echo(bot):
                 else:
                     pass
 
+
+
+            # Process with startswith '/' FIRST => command with params
+            if message.startswith('/'):
+                libStartswith = Startswith(message)
+                # Get command string
+                command = message.split(' ')[0][1:]
+                # Call function from lib depends on command
+                try:
+                    result = getattr(libStartswith, command)()
+                    response(result)
+
+                    return
+                except Exception as e:
+                    print(e)
+                    pass
 
             libEqual = Equal()
 
@@ -125,21 +143,6 @@ def echo(bot):
 
                     return
                 except Exception as e:
-                    pass
-
-            # Process with startswith '/' => command with params
-            if message.startswith('/'):
-                libStartswith = Startswith(message)
-                # Get command string
-                command = message.split(' ')[0][1:]
-                # Call function from lib depends on command
-                try:
-                    result = getattr(libStartswith, command)()
-                    response(result)
-
-                    return
-                except Exception as e:
-                    print(e)
                     pass
 
             # Process with in message command
