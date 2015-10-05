@@ -39,8 +39,8 @@ def main():
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
     # Telegram Bot Authorization Token
-    #bot = telegram.Bot('82438901:AAFgzYUb4pQ_1qabUqY7fLJpBd4Ne7vJfLk')
-    bot = telegram.Bot('127546764:AAH2odfpjrrjTvcsKWbia2EIWdmvfWFIVZ0')  # test hat bot
+    bot = telegram.Bot('82438901:AAFgzYUb4pQ_1qabUqY7fLJpBd4Ne7vJfLk')
+    #bot = telegram.Bot('127546764:AAH2odfpjrrjTvcsKWbia2EIWdmvfWFIVZ0')  # test hat bot
 
 
     global dict
