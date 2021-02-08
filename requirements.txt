@@ -2,7 +2,7 @@ altgraph==0.12
 cssselect==0.9.1
 feedparser==5.2.1
 gspread==0.2.5
-httplib2==0.9.1
+httplib2==0.19.0
 Jinja2==2.8
 lxml==3.4.4
 macholib==1.7
